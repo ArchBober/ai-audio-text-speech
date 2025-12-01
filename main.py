@@ -1,7 +1,6 @@
 from google import genai
 from google.genai import types
-from google.cloud.speech_v2 import SpeechClient
-from google.cloud.speech_v2.types import cloud_speech
+import whisper
 
 import sys
 import os
@@ -9,8 +8,6 @@ import os
 from dotenv import load_dotenv
 
 print("got init")
-
-PROJECT_ID = os.getenv("PROJECT_ID")
 
 def main():
     load_dotenv()
@@ -38,22 +35,42 @@ def main():
 
     print("Client initialized. Sending request...")
 
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash", 
-            contents="Are you online? Reply with 'Connection Successful'."
-        )
+    # try:
+    #     response = client.models.generate_content(
+    #         model="gemini-2.0-flash", 
+    #         contents="Are you online? Reply with 'Connection Successful'."
+    #     )
         
-        print("\n--- Response ---")
-        print(response.text)
-        print("----------------")
+    #     print("\n--- Response ---")
+    #     print(response.text)
+    #     print("----------------")
 
-        if verbose:
-            print("Prompt tokens:", response.usage_metadata.prompt_token_count)
-            print("Response tokens:", response.usage_metadata.candidates_token_count)
+    #     if verbose:
+    #         print("Prompt tokens:", response.usage_metadata.prompt_token_count)
+    #         print("Response tokens:", response.usage_metadata.candidates_token_count)
         
-    except Exception as e:
-        print(f"\nError: {e}")
+    # except Exception as e:
+    #     print(f"\nError: {e}")
+
+    model = whisper.load_model("turbo")
+
+    # load audio and pad/trim it to fit 30 seconds
+    audio = whisper.load_audio("Samples/message_accepted.wav")
+    audio = whisper.pad_or_trim(audio)
+
+    # make log-Mel spectrogram and move to the same device as the model
+    mel = whisper.log_mel_spectrogram(audio, n_mels=model.dims.n_mels).to(model.device)
+
+    # detect the spoken language
+    _, probs = model.detect_language(mel)
+    print(f"Detected language: {max(probs, key=probs.get)}")
+
+    # decode the audio
+    options = whisper.DecodingOptions()
+    result = whisper.decode(model, mel, options)
+
+    # print the recognized text
+    print(result.text)
 
 
 
