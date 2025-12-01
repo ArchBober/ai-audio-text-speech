@@ -3,8 +3,6 @@ from google.genai import types
 
 from dotenv import load_dotenv
 
-print("Hello world")
-
 def main():
     load_dotenv()
 
