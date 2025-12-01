@@ -1,7 +1,7 @@
 from google import genai
 from google.genai import types
-# from google.cloud.speech_v2 import SpeechClient
-# from google.cloud.speech_v2.types import cloud_speech
+from google.cloud.speech_v2 import SpeechClient
+from google.cloud.speech_v2.types import cloud_speech
 
 import sys
 import os
@@ -55,53 +55,7 @@ def main():
     except Exception as e:
         print(f"\nError: {e}")
 
-    print("TESTING READ AUDIO FILE")
 
-    with open("FreeSamplesPixabay/nowwhat-96488.mp3", "rb") as f:
-        audio_content = f.read()
-
-    print("AUDIO FILE OPENED")
-    print("TEST SPEECH CLIENT")
-
-    # speechclient = SpeechClient()
-    # model =genai.GenerativeModel("speech_to_text")
-
-    print("SPEECH CLIENT CREATED")
-    print("SPEECH CLIENT - SETTING CONFIG")
-
-    # config = cloud_speech.RecognitionConfig(
-    #     auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
-    #     language_codes=["en-UK"],
-    #     model="long",
-    # )
-
-    print("SPEECH CLIENT CONFIG CREATED")
-
-    print("REQUESTING TRANSCRIPTION RECOGNIZER")
-
-    # request = cloud_speech.RecognizeRequest(
-    #     config=config,
-    #     content=audio_content,
-    # )
-
-    print("SET TRANSCRIPTION RECOGNIZER")
-
-    print("GETTING RESPONSE")
-
-    # try:
-    #     response = client.recognize(request=request)
-        
-    #     print("\n--- Response ---")
-    #     for result in response.results:
-    #         print(f"Transcript: {result.alternatives[0].transcript}")
-    #     print("----------------")
-
-    #     # if verbose:
-    #     #     print("Prompt tokens:", response.usage_metadata.prompt_token_count)
-    #     #     print("Response tokens:", response.usage_metadata.candidates_token_count)
-        
-    # except Exception as e:
-    #     print(f"\nError: {e}")
 
 
 if __name__ == "__main__":
