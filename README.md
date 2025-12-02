@@ -67,10 +67,13 @@ Audio content written to file: response.mp3
 
 #### Audio Output 
 
-<audio controls>
-  <source src="./Samples/example_response2.mp3" type="audio/mpeg">
+&lt;audio controls&gt;
+
+  &lt;source src="./Samples/example_response2.mp3" type="audio/mpeg"&gt;
+
   Your browser does not support the audio element.
-</audio>
+
+&lt;/audio&gt;
 
 #### Transcription:
 `Hello! My day has been quite good so far. I've been helping many students with their English, just like I'm doing with you now. How about you, how was your day?`
