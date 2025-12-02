@@ -112,7 +112,8 @@ TTS_PROMPT=f"""As a teacher of {LANGUAGE} language talk with calm and polite voi
 |-------|----------|-----|
 | **Google Vertex AI Overview** | Official product page | https://cloud.google.com/vertex-ai |
 | **Google Vertex AI Model Garden** | Catalog of pre‑trained models (including Gemini, PaLM, Imagen, etc.) | https://cloud.google.com/model-garden?hl=en|
-| **Gemini Models on Vertex AI** | Details on Gemini family, versions, pricing, and usage limits | https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models |
+| **Google Vertex AI Model Garden** | Catalog of pre‑trained models (including Gemini, PaLM, Imagen, etc.) | https://cloud.google.com/model-garden?hl=en|
+| **Whisper OpenAI** | STT local models | https://github.com/openai/whisper |
 | **Text‑to‑Speech (TTS) API** | Documentation for Google Cloud TTS, supported voices & formats | https://cloud.google.com/text-to-speech/docs |
 | **Speech‑to‑Text (STT) API** | Docs for streaming and batch speech recognition | https://cloud.google.com/speech-to-text/docs |
 | **Authentication (Service Accounts & OAuth2)** | How to create and use service‑account keys for Vertex AI | https://cloud.google.com/docs/authentication/production |
