@@ -31,6 +31,7 @@ def main():
 
     if "--help" in sys.argv:
         print(HELP_DESCRIPTION)
+        sys.exit(0)
 
     verbose = "--verbose" in sys.argv
     prompt = "--prompt" in sys.argv
