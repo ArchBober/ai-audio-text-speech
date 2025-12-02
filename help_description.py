@@ -13,4 +13,14 @@ By using/editing this code you take full responsibility for your actions and pot
     --help - Show this text.
     --prompt - Add own prompt in "" to override stt audio reanscription from file.
     --verbose - Show logs and additional info in cli.
+
+[Examples]
+    # Normal usage - record from microphone or load an audio file
+    uv run main.py "audiofile.mp3"
+
+    # Supply a custom prompt instead of transcribing audio
+    uv run main.py --prompt "Explain quantum entanglement in plain English."
+
+    # Get verbose output for debugging
+    uv run main.py "audiofile.mp3" --verbose
 ''' 
