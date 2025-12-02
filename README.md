@@ -16,7 +16,7 @@
 
 ### Audio input `hi.wav`
 
-https://github.com/ArchBober/AI-Speak-Think-Play-Tool/blob/bde99810b367dbec86d04c3dd83dc2dcb17bc1f8/Samples/hi.wav
+🎵 [Click here to listen to the audio player](https://archbober.github.io/AI-Speak-Think-Play-Tool/audio_input.html)
 
 #### Transcription:
 `Hi, tell me about your day.`
@@ -64,7 +64,7 @@ Audio content written to file: response.mp3
 
 #### Audio Output 
 
-https://github.com/ArchBober/AI-Speak-Think-Play-Tool/blob/bde99810b367dbec86d04c3dd83dc2dcb17bc1f8/Samples/example_response2.mp3
+🎵 [Click here to listen to the audio player](https://archbober.github.io/AI-Speak-Think-Play-Tool/audio_output.html)
 
 #### Transcription:
 `Hello! My day has been quite good so far. I've been helping many students with their English, just like I'm doing with you now. How about you, how was your day?`
