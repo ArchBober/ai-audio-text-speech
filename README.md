@@ -29,8 +29,8 @@
 # Clone the repo (if you haven’t already)
 
 ```bash
-git clone <repo‑url>
-cd <repo‑folder>
+git clone https://github.com/ArchBober/AI-Speak-Think-Play-Tool.git
+cd AI-Speak-Think-Play-Tool
 ```
 # Install dependencies with uv (recommended)
 ```bash
