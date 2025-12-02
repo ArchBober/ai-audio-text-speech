@@ -1,15 +1,133 @@
-AI Audio Transcribing Tool 0.1.0 for communicating with LLM model through audio file or prompt and getting speech response. 
-Designed mainly for polishing speaking in foreign languages with small privacy upgrade by using local Speech-To-Text (STT) model but can also be used for other purposes. 
-LLM and Text-To-Speech model is designed at the moment to use Gemini available models. 
-To use this project user needs to have set API key for Vertex AI service (set in .env under VERTEX_AI_API_KEY) and have OAuth2 secret json file available from Google Cloud services by setting up project and activating TTS api (json filepath need to be in .env under SECRET_JSON_FILEPATH).
-This is testing/learning project and by that i'm not taking responsibility for other users actions using this code. 
-By using/editing this code you take full responsibility for your actions and potential negative effects (ex. high token consuption, restricted GC services and more).
+## AI Audio Transcribing Tool 0.1.0  
+*A lightweight utility for interacting with an LLM via audio (or a text prompt) and receiving spoken responses.*
 
-[Usage]
-    uv run main.py [options] <input-audio-filepath>
-    uv run main.py [options] --prompt "<your prompt text>"
+---
 
-[Options]
-    --help - Show this text.
-    --prompt - Add own prompt in "" to override stt audio reanscription from file.
-    --verbose - Show logs and additional info in cli.
+### What It Does
+- **Transcribes** spoken input (audio file) with a local Speech‑to‑Text (STT) model (privacy‑first for your voice).  
+- Sends the transcription to a Gemini LLM.  
+- Returns the LLM’s answer as **speech** using Text‑to‑Speech (TTS).  
+
+> Ideal for polishing pronunciation in foreign languages, but flexible enough for any audio‑driven workflow.
+
+---
+
+### Prerequisites  
+
+| Item | How to obtain |
+|------|----------------|
+| **Vertex AI API key** | Create a Vertex AI project in Google Cloud, enable the API, then copy the key into a `.env` file as `VERTEX_AI_API_KEY`. |
+| **OAuth2 service‑account JSON** | In the same Google Cloud project, enable the **Text‑to‑Speech** API, create a service‑account key, and store the file path in `.env` as `SECRET_JSON_FILEPATH`. |
+
+> **Note:** This is a learning / testing project. You are fully responsible for any costs (e.g., token usage, Google Cloud quotas) incurred by running the code.
+
+---
+
+### Installation  
+
+
+# Clone the repo (if you haven’t already)
+
+```bash
+git clone <repo‑url>
+cd <repo‑folder>
+```
+# Install dependencies with uv (recommended)
+```bash
+uv venv
+source .venv/bin/activate # on windows can be different
+uv sync   # reads pyproject.toml
+```
+
+### Running the Tool  
+
+```bash
+uv run main.py [options] <input-audio-filepath>
+uv run main.py [options] --prompt "<your prompt text>"
+```
+#### Options  
+
+| Flag | Description |
+|------|-------------|
+| `--help` | Show the help text (this document). |
+| `--prompt "<text>"` | Bypass STT and feed your own prompt directly to the LLM. |
+| `--verbose` | Enable detailed logging and extra CLI output. |
+
+**Examples**
+
+```bash
+# Normal usage – record from microphone or load an audio file
+uv run main.py "audiofile.mp3"
+
+# Supply a custom prompt instead of transcribing audio
+uv run main.py --prompt "Explain quantum entanglement in plain English."
+
+# Get verbose output for debugging
+uv run main.py "audiofile.mp3" --verbose
+```
+### How It Works (high‑level)
+
+1. **Capture audio** (for now only file).  
+2. **Local STT** → produces a text transcript.  
+3. **Send transcript** to a Gemini model (via Vertex AI).  
+4. **Receive LLM response** (text).  
+5. **TTS** → synthesize the response as audio and play it back.
+
+---
+
+## Configuration Constants
+
+| Variable | Default Value | Description |
+|----------|---------------|-------------|
+| `OUTPUT_AUDIO_FILEPATH` | `"response.mp3"` | Path (relative or absolute) where the synthesized speech audio will be saved after the TTS step. |
+| `LANGUAGE` | `"en-US"` | BCP‑47 language tag used by the STT and TTS services (e.g., `en-US`, `es-ES`, `fr-FR`). |
+| `LANGUAGE_LVL` | `"B1"` | Target proficiency level for the learner (A1‑B2 range). This value is injected into the LLM prompt to adapt the difficulty of the conversation. |
+| `SPEAKING_RATE` | `1.2` | Speed multiplier for the generated voice. `1.0` is the default; acceptable range is roughly `0.5` (slow) → `2.0` (fast). |
+| `STT_MODEL` | `"turbo"` | Identifier of the Whisper‑style speech‑to‑text model. Options include:<br>• `tiny` (≈ 1 GB VRAM)<br>• `base` (≈ 1 GB VRAM)<br>• `small` (≈ 2 GB VRAM)<br>• `medium` (≈ 5 GB VRAM)<br>• `large` (≈ 10 GB VRAM)<br>• `turbo` (≈ 6 GB VRAM, fastest inference). |
+| `LLM_MODEL` | `"gemini-2.0-flash"` | The generative‑AI model used for the dialogue. Gemini‑2.0‑Flash offers a good balance of speed and quality for conversational tasks. |
+| `TTS_MODEL` | `"gemini-2.5-flash-lite-preview-tts"` | The text‑to‑speech model that produces the audio response. The *lite* preview is optimized for lower latency and cost. |
+| `TTS_VOICE` | `"Enceladus"` | Named voice preset supplied by the TTS model. Different voices have distinct timbres and accents; choose the one that best fits a language‑teacher persona. |
+| `LLM_PROMPT` | *(see below)* | System prompt fed to the LLM. It sets the role (“language teacher”), tone (simple vocabulary, short answers), student proficiency (`{LANGUAGE_LVL}`), and name (`Mark Spencer`). The prompt also encourages ending replies with a question to keep the conversation flowing. |
+| `TTS_PROMPT` | `"As a teacher of en_US language talk with calm and polite voice."` | Optional instruction for the TTS engine to shape prosody (calm, polite) and reinforce the teaching persona. |
+| ~~`MAX_CHARS`~~ | ~~`10000`~~ | `NOT IMPLEMENTED!` ~~Upper limit on the number of characters that can be sent to the LLM in a single request. Prevents oversized payloads that could exceed API limits.~~ |
+| `TTS_AUDIO_TOKEN_PRICE` | `10` | Cost (in your chosen currency unit) per **audio token** generated by the TTS model. Useful for budgeting and cost‑tracking scripts. Must be adjusted by user (check pricing page for each model) |
+| `TTS_TEXT_TOKEN_PRICE` | `0.5` | Cost per **text token** processed by the TTS model (the input text length). Must be adjusted by user (check pricing page for each model) |
+| `LLM_INPUT_TOKEN_PRICE` | `0.15` | Cost per **input token** sent to the LLM. Must be adjusted by user (check pricing page for each model) |
+| `LLM_OUTPUT_TOKEN_PRICE` | `0.6` | Cost per **output token** returned by the LLM. Must be adjusted by user (check pricing page for each model) |
+
+### Example of the `LLM_PROMPT` and `TTS_PROMPT`
+
+```python
+LLM_PROMPT = f"""
+You are {LANGUAGE} teacher that help with basic difficulties of learning that language. Your main goal is to talk to student and use not too many hard words. Students are expected to be on level A1 up to B2 in that language. Your today student is expected to be on {LANGUAGE_LVL} language profficiency. Your name is Mark Spencer but tell your name only when asked. Also try to keep responses short and straight to the point. If possible try to end sentences with questions for student to keep conversation.
+"""
+
+TTS_PROMPT=f"""As a teacher of {LANGUAGE} language talk with calm and polite voice."""
+```
+---
+
+### Sources worth peeking
+
+| Topic | Resource | URL |
+|-------|----------|-----|
+| **Google Vertex AI Overview** | Official product page | https://cloud.google.com/vertex-ai |
+| **Google Vertex AI Model Garden** | Catalog of pre‑trained models (including Gemini, PaLM, Imagen, etc.) | https://cloud.google.com/model-garden?hl=en|
+| **Gemini Models on Vertex AI** | Details on Gemini family, versions, pricing, and usage limits | https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models |
+| **Text‑to‑Speech (TTS) API** | Documentation for Google Cloud TTS, supported voices & formats | https://cloud.google.com/text-to-speech/docs |
+| **Speech‑to‑Text (STT) API** | Docs for streaming and batch speech recognition | https://cloud.google.com/speech-to-text/docs |
+| **Authentication (Service Accounts & OAuth2)** | How to create and use service‑account keys for Vertex AI | https://cloud.google.com/docs/authentication/production |
+| **Quota & Billing for Vertex AI** | Information on token usage, request limits, and cost estimation | https://cloud.google.com/vertex-ai/pricing |
+| **Vertex AI Samples & Tutorials** | End‑to‑end notebooks and code snippets for common use‑cases | https://github.com/GoogleCloudPlatform/vertex-ai-samples |
+| **Google Generative AI Playground** (interactive demo of Gemini models) | Quick way to test prompts and see model capabilities | https://makersuite.google.com/app/apikey |
+| **Security & Compliance** | Data protection, encryption, and compliance certifications for Vertex AI | https://cloud.google.com/security/compliance |
+
+
+### Disclaimer  
+
+- This repository is provided **as‑is** for experimentation and learning.  
+- The author assumes **no liability** for misuse, unexpected costs, or service restrictions arising from running the code.  
+- By using or modifying the tool you accept full responsibility for any consequences (e.g., high token consumption, hitting Google Cloud limits, etc.).
+
+--- 
+
+Feel free to tweak the code, swap out the Gemini models, or integrate your own STT/TTS engines! 🎤🗣️✨
