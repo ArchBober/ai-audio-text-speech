@@ -10,7 +10,7 @@ def stt(audio_filepath: str, verbose: bool = False) -> str:
     if verbose:
         print(f"Loading audio from '{audio_filepath}' and finding language")
     # load audio and pad/trim it to fit 30 seconds
-    audio = whisper.load_audio("Samples/message_accepted.wav")
+    audio = whisper.load_audio(audio_filepath)
     audio = whisper.pad_or_trim(audio)
 
     # make log-Mel spectrogram and move to the same device as the model

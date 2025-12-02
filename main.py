@@ -54,7 +54,7 @@ def main():
         )
     )
 
-    transcription = stt("Samples/message_accepted.wav", verbose)
+    transcription = stt("Samples/france.wav", verbose)
     llm_response = llm(client_llm, transcription, verbose)
     tts(client_tts, llm_response, "response.mp3", verbose)
 
