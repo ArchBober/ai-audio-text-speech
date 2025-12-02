@@ -16,10 +16,10 @@
 
 ### Audio input `hi.wav`
 
-<video controls width="300" height="50">
+<audio controls>
   <source src="./Samples/hi.wav" type="audio/wav">
   Your browser does not support the audio element.
-</video>
+</audio>
 
 #### Transcription:
 `Hi, tell me about your day.`
@@ -67,10 +67,10 @@ Audio content written to file: response.mp3
 
 #### Audio Output 
 
-<video controls width="300" height="50">
+<audio controls>
   <source src="./Samples/example_response2.mp3" type="audio/mpeg">
   Your browser does not support the video tag.
-</video>
+</audio>
 
 #### Transcription:
 `Hello! My day has been quite good so far. I've been helping many students with their English, just like I'm doing with you now. How about you, how was your day?`
